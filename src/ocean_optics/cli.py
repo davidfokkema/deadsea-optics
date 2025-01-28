@@ -1,11 +1,11 @@
 import csv
-import pathlib
-from typing import Annotated
+from typing import Annotated, TextIO
 
 import matplotlib.pyplot as plt
 import numpy as np
 import plotext
 import typer
+from numpy.typing import NDArray
 from rich import print
 from rich.progress import track
 from rich.table import Table
@@ -17,7 +17,7 @@ app = typer.Typer()
 
 
 @app.command()
-def check():
+def check() -> None:
     """Check if a compatible device can be found."""
     try:
         SpectroscopyExperiment()
@@ -52,16 +52,17 @@ def spectrum(
         ),
     ] = False,
     limits: Annotated[
-        tuple[float, float], typer.Option(help="Restrict wavelengths to (min, max).")
-    ] = (None, None),
+        tuple[float, float] | None,
+        typer.Option(help="Restrict wavelengths to (min, max)."),
+    ] = None,
     output: Annotated[
-        typer.FileTextWrite,
+        typer.FileTextWrite | None,
         typer.Option("--output", "-o", help="Write the results to a CSV file."),
     ] = None,
     quiet: Annotated[
         bool, typer.Option("--quiet", "-q", help="Don't show any console output.")
     ] = False,
-):
+) -> None:
     """Record a spectrum.
 
     Record a spectrum using the spectrometer, displaying the results in a graph
@@ -73,8 +74,8 @@ def spectrum(
     experiment.set_integration_time(int_time)
     wavelengths, intensities = experiment.get_spectrum()
 
-    xmin, xmax = limits
-    if limits != (None, None):
+    if limits is not None:
+        xmin, xmax = limits
         mask = (xmin <= wavelengths) & (wavelengths <= xmax)
         wavelengths = wavelengths[mask]
         intensities = intensities[mask]
@@ -96,7 +97,8 @@ def spectrum(
                     plotext.scatter(wavelengths, intensities, marker="braille")
                 else:
                     plotext.plot(wavelengths, intensities, marker="braille")
-                plotext.xlim(xmin, xmax)
+                if limits is not None:
+                    plotext.xlim(xmin, xmax)
                 plotext.xlabel("Wavelength (nm)")
                 plotext.ylabel("Intensity")
                 plotext.show()
@@ -136,13 +138,14 @@ def integrate(
         ),
     ] = False,
     limits: Annotated[
-        tuple[float, float], typer.Option(help="Restrict wavelengths to (min, max).")
-    ] = (None, None),
+        tuple[float, float] | None,
+        typer.Option(help="Restrict wavelengths to (min, max)."),
+    ] = None,
     output: Annotated[
-        typer.FileTextWrite,
+        typer.FileTextWrite | None,
         typer.Option("--output", "-o", help="Write the results to a CSV file."),
     ] = None,
-):
+) -> None:
     """Record a spectrum by integrating over multiple measurements.
 
     Record an integrated spectrum using the spectrometer. Multiple measurements
@@ -152,16 +155,17 @@ def integrate(
     """
     experiment = open_experiment()
     experiment.set_integration_time(int_time)
-    xmin, xmax = limits
 
     plotext.theme("clear")
-    plotext.xlim(xmin, xmax)
+    if limits is not None:
+        xmin, xmax = limits
+        plotext.xlim(xmin, xmax)
     plotext.xlabel("Wavelength (nm)")
     plotext.ylabel("Intensity")
     for wavelengths, intensities in track(
         experiment.integrate_spectrum(count), total=count, description="Taking data..."
     ):
-        if limits != (None, None):
+        if limits is not None:
             mask = (xmin <= wavelengths) & (wavelengths <= xmax)
             wavelengths = wavelengths[mask]
             intensities = intensities[mask]
@@ -179,12 +183,12 @@ def integrate(
 
 
 @app.command()
-def gui():
+def gui() -> None:
     """Run the GUI spectroscopy application."""
     ocean_optics.gui.main()
 
 
-def open_experiment():
+def open_experiment() -> SpectroscopyExperiment:
     """Open the spectroscopy experiment.
 
     Connect to an available spectropy device.
@@ -204,7 +208,7 @@ def open_experiment():
 
 
 def save_spectrum(
-    path: pathlib.Path, wavelengths: np.ndarray, intensities: np.ndarray
+    file: TextIO, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
 ) -> None:
     """Save spectrum data to a file as CSV.
 
@@ -213,11 +217,11 @@ def save_spectrum(
         wavelengths: The wavelength values.
         intensities: The intensity data.
     """
-    writer = csv.writer(path)
+    writer = csv.writer(file)
     writer.writerow(["Wavelength (nm)", "Intensity"])
     for wavelength, intensity in zip(wavelengths, intensities):
         writer.writerow([wavelength, intensity])
-    print(f"Data written to [bold]{path.name}[/] successfully.")
+    print(f"Data written to [bold]{file.name}[/] successfully.")
 
 
 if __name__ == "__main__":

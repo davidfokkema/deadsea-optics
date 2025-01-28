@@ -1,6 +1,7 @@
 from typing import Iterator
 
 import numpy as np
+from numpy.typing import NDArray
 
 from ocean_optics.usb2000plus import DeviceNotFoundError, OceanOpticsUSB2000Plus
 
@@ -13,7 +14,7 @@ class SpectroscopyExperiment:
     def __init__(self) -> None:
         self.device = OceanOpticsUSB2000Plus()
 
-    def get_spectrum(self) -> tuple[np.ndarray, np.ndarray]:
+    def get_spectrum(self) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
         """Record a spectrum.
 
         Returns:
@@ -24,7 +25,9 @@ class SpectroscopyExperiment:
         """
         return self.device.get_spectrum()
 
-    def integrate_spectrum(self, count: int) -> Iterator[tuple[np.ndarray, np.ndarray]]:
+    def integrate_spectrum(
+        self, count: int
+    ) -> Iterator[tuple[NDArray[np.floating], NDArray[np.floating]]]:
         """Record a spectrum by integrating over multiple measurements.
 
         Record an integrated spectrum using the spectrometer. This method acts

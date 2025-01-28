@@ -5,6 +5,7 @@ import numpy as np
 import plotext as plt
 import usb.core
 import usb.util
+from numpy.typing import NDArray
 
 
 class DeviceNotFoundError(Exception):
@@ -135,7 +136,7 @@ class OceanOpticsUSB2000Plus:
         data = value[2 : value.find(b"\x00", 2)]
         return data.decode()
 
-    def _get_saturation_level(self) -> int:
+    def _get_saturation_level(self) -> np.uint16:
         """Get device saturation level.
 
         Returns:
@@ -145,9 +146,9 @@ class OceanOpticsUSB2000Plus:
         self.device.write(0x01, command)
         data: bytes = self.device.read(0x81, 17).tobytes()
         assert data[:2] == command
-        return np.frombuffer(data[6:8], dtype=np.uint16)[0]
+        return np.uint16(np.frombuffer(data[6:8], dtype=np.uint16)[0])
 
-    def get_spectrum(self):
+    def get_spectrum(self) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
         """Record a calibrated spectrum.
 
         Returns:
@@ -160,14 +161,14 @@ class OceanOpticsUSB2000Plus:
             different intensity levels is the so-called 'saturation level'.
         """
         data = self.get_raw_spectrum()
-        x = np.arange(len(data))
+        x = np.arange(len(data), dtype=np.float64)
         c = self._config.wavelength_calibration_coefficients
         x = c[0] + c[1] * x + c[2] * x**2 + c[3] * x**3
         # scale data, described as 'autonulling' in the manual.
-        data = data * (65535 / self._config.saturation_level)
-        return x[20:], data[20:]
+        intensity = data * (65535 / self._config.saturation_level)
+        return x[20:], intensity[20:]
 
-    def get_raw_spectrum(self):
+    def get_raw_spectrum(self) -> NDArray[np.uint16]:
         """Record a raw spectrum, including dark pixels.
 
         Returns:

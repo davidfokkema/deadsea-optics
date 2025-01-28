@@ -1,8 +1,10 @@
 import csv
 import sys
+from typing import Any
 
 import numpy as np
 import pyqtgraph as pg
+from numpy.typing import NDArray
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtCore import Slot
 
@@ -18,7 +20,9 @@ class MeasurementWorker(QtCore.QThread):
     new_data = QtCore.Signal(np.ndarray, np.ndarray)
     stopped = False
 
-    def setup(self, experiment: SpectroscopyExperiment) -> None:
+    def setup(
+        self, experiment: SpectroscopyExperiment, *args: Any, **kwargs: Any
+    ) -> None:
         self.experiment = experiment
 
     def run(self) -> None: ...
@@ -60,15 +64,15 @@ class ContinuousSpectrumWorker(MeasurementWorker):
 
 
 class UserInterface(QtWidgets.QMainWindow):
-    _wavelengths: np.ndarray | None = None
-    _intensities: np.ndarray | None = None
+    _wavelengths: NDArray[np.floating] | None = None
+    _intensities: NDArray[np.floating] | None = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Load UI
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self)  # type: ignore
 
         # Slots and signals
         self.ui.integration_time.valueChanged.connect(self.set_integration_time)
@@ -91,7 +95,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.continuous_spectrum_worker.new_data.connect(self.plot_new_data)
         self.continuous_spectrum_worker.finished.connect(self.worker_has_finished)
 
-    @Slot()
+    @Slot(int)  # type: ignore
     def set_integration_time(self, value: int) -> None:
         self.experiment.set_integration_time(value)
 
@@ -139,7 +143,9 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.continuous_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
 
-    def plot_data(self, wavelengths, intensities) -> None:
+    def plot_data(
+        self, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
+    ) -> None:
         self._wavelengths = wavelengths
         self._intensities = intensities
         self.ui.plot_widget.clear()
@@ -150,20 +156,22 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.plot_widget.setLabel("bottom", "Wavelength (nm)")
         self.ui.plot_widget.setLimits(yMin=0)
 
-    @Slot(tuple)
-    def plot_new_data(self, wavelengths: np.ndarray, intensities: np.ndarray) -> None:
+    @Slot(tuple)  # type: ignore
+    def plot_new_data(
+        self, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
+    ) -> None:
         self.plot_data(wavelengths, intensities)
 
-    @Slot(int)
+    @Slot(int)  # type: ignore
     def update_progress_bar(self, value: int) -> None:
         self.ui.progress_bar.setValue(value)
 
     @Slot()
     def save_data(self) -> None:
-        if self._wavelengths is None:
+        if self._wavelengths is None or self._intensities is None:
             QtWidgets.QMessageBox.warning(
                 self, "No data", "Perform a measurement before saving."
-            )
+            )  # type: ignore
         else:
             path, _ = QtWidgets.QFileDialog.getSaveFileName(filter="CSV Files (*.csv)")
             with open(path, mode="w") as f:
@@ -176,7 +184,7 @@ class UserInterface(QtWidgets.QMainWindow):
             )
 
 
-def main():
+def main() -> None:
     app = QtWidgets.QApplication(sys.argv)
     ui = UserInterface()
     ui.show()
