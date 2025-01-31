@@ -8,7 +8,7 @@ from numpy.typing import NDArray
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtCore import Slot
 
-from ocean_optics.spectroscopy import SpectroscopyExperiment
+from ocean_optics.spectroscopy import DeviceNotFoundError, SpectroscopyExperiment
 from ocean_optics.ui_main_window import Ui_MainWindow
 
 # PyQtGraph global options
@@ -83,7 +83,14 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.save_button.clicked.connect(self.save_data)
 
         # Open device
-        self.experiment = SpectroscopyExperiment()
+        try:
+            self.experiment = SpectroscopyExperiment()
+        except DeviceNotFoundError:
+            msg = "Please connect a compatible device."
+            if sys.platform == "win32":
+                msg += " Also make sure the device is registered as a WinUSB device, using device manager."
+            QtWidgets.QMessageBox.critical(self, "Device not found", msg)
+            sys.exit()
         self.experiment.set_integration_time(self.ui.integration_time.value())
 
         # Workers
