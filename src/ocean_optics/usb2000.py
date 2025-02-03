@@ -30,7 +30,11 @@ class OceanOpticsUSB2000(OceanOpticsUSB2000Plus):
         # self.device.set_configuration()
 
         # There may be stale data from incompleted reads in the buffers.
-        self.clear_buffers()
+        try:
+            self.clear_buffers()
+        except NotImplementedError:
+            # Device was opened, but is not functional
+            raise DeviceNotFoundError()
 
         # Initialize device
         self.device.write(self._ENDPOINT_OUT, b"\x01")
