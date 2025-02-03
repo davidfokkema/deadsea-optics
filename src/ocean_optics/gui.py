@@ -198,6 +198,12 @@ class UserInterface(QtWidgets.QMainWindow):
     ) -> None:
         self._wavelengths = wavelengths
         self._intensities = intensities
+        if self._intensities.max() == 65535.0:
+            self.ui.statusbar.showMessage(
+                "🔴 WARNING: overflow detected, reduce integration time."
+            )
+        else:
+            self.ui.statusbar.showMessage("🟢 Data condition: good.")
         self.plot_data()
 
     @Slot()
