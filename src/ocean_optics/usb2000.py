@@ -116,4 +116,5 @@ if __name__ == "__main__":
     plt.plot(x, [int(y) for y in data])
     plt.show()
 
+    print(f"{dev.has_overflow=}")
     print(dev.get_configuration())

@@ -205,7 +205,7 @@ class UserInterface(QtWidgets.QMainWindow):
     ) -> None:
         self._wavelengths = wavelengths
         self._intensities = intensities
-        if self._intensities.max() == 65535.0:
+        if self.experiment.has_overflow:
             self.ui.statusbar.showMessage(
                 "🔴 WARNING: overflow detected, reduce integration time."
             )

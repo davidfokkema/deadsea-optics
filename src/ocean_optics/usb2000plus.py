@@ -36,6 +36,8 @@ class OceanOpticsUSB2000Plus:
     _ENDPOINT_IN_CMD = 0x81
     _ENDPOINT_IN_SPECTRUM = 0x82
 
+    has_overflow: bool = False
+
     def __init__(self) -> None:
         self.device = libusb_package.find(idVendor=0x2457, idProduct=0x101E)
         if self.device is None:
@@ -175,6 +177,7 @@ class OceanOpticsUSB2000Plus:
         x = c[0] + c[1] * x + c[2] * x**2 + c[3] * x**3
         # scale data, described as 'autonulling' in the manual.
         intensity = data * (65535 / self._config.saturation_level)
+        self.has_overflow = bool(intensity.max() == 65535)
         return x[20:], intensity[20:]
 
     def get_raw_spectrum(self) -> NDArray[np.uint16]:
@@ -225,4 +228,5 @@ if __name__ == "__main__":
     plt.plot(x, [int(y) for y in data])
     plt.show()
 
+    print(f"{dev.has_overflow=}")
     print(dev.get_configuration())

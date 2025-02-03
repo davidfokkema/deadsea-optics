@@ -15,6 +15,7 @@ __all__ = ["DeviceNotFoundError", "SpectroscopyExperiment", "SpectrumTimeOutErro
 
 class SpectroscopyExperiment:
     stopped = True
+    has_overflow: bool = False
 
     def __init__(self) -> None:
         try:
@@ -31,7 +32,9 @@ class SpectroscopyExperiment:
             units (but should be calibrated so that different devices yield the
             same output).
         """
-        return self.device.get_spectrum()
+        data = self.device.get_spectrum()
+        self.has_overflow = self.device.has_overflow
+        return data
 
     def integrate_spectrum(
         self, count: int
@@ -57,9 +60,12 @@ class SpectroscopyExperiment:
             same output).
         """
         self.stopped = False
+        self.has_overflow = False
         all_spectra = []
         for _ in range(count):
             wavelengths, intensities = self.device.get_spectrum()
+            if self.device.has_overflow:
+                self.has_overflow = True
             all_spectra.append(intensities)
             yield wavelengths, np.sum(all_spectra, axis=0)
             if self.stopped:
