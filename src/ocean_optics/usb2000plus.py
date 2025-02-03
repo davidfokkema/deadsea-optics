@@ -220,10 +220,9 @@ class OceanOpticsUSB2000Plus:
 if __name__ == "__main__":
     dev = OceanOpticsUSB2000Plus()
 
-    print(dev.device)
-    # x, data = dev.get_spectrum()
-    # plt.clf()
-    # plt.plot(x, [int(y) for y in data])
-    # plt.show()
+    x, data = dev.get_spectrum()
+    plt.clf()
+    plt.plot(x, [int(y) for y in data])
+    plt.show()
 
-    # print(dev.get_configuration())
+    print(dev.get_configuration())

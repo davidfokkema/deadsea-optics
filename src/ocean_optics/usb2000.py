@@ -5,7 +5,6 @@ import usb.core
 from numpy.typing import NDArray
 
 from ocean_optics.usb2000plus import (
-    DeviceConfiguration,
     DeviceNotFoundError,
     OceanOpticsUSB2000Plus,
     SpectrumTimeOutError,
@@ -111,10 +110,10 @@ class OceanOpticsUSB2000(OceanOpticsUSB2000Plus):
 
 if __name__ == "__main__":
     dev = OceanOpticsUSB2000()
-    print(dev._config)
-    dev.set_integration_time(1_000_000)
+
     x, data = dev.get_spectrum()
     plt.clf()
     plt.plot(x, [int(y) for y in data])
     plt.show()
-    print(data.max())
+
+    print(dev.get_configuration())
