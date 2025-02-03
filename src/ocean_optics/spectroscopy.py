@@ -3,16 +3,24 @@ from typing import Iterator
 import numpy as np
 from numpy.typing import NDArray
 
-from ocean_optics.usb2000plus import DeviceNotFoundError, OceanOpticsUSB2000Plus
+from ocean_optics.usb2000 import OceanOpticsUSB2000
+from ocean_optics.usb2000plus import (
+    DeviceNotFoundError,
+    OceanOpticsUSB2000Plus,
+    SpectrumTimeOutError,
+)
 
-__all__ = ["DeviceNotFoundError", "SpectroscopyExperiment"]
+__all__ = ["DeviceNotFoundError", "SpectroscopyExperiment", "SpectrumTimeOutError"]
 
 
 class SpectroscopyExperiment:
     stopped = True
 
     def __init__(self) -> None:
-        self.device = OceanOpticsUSB2000Plus()
+        try:
+            self.device = OceanOpticsUSB2000Plus()
+        except DeviceNotFoundError:
+            self.device = OceanOpticsUSB2000()
 
     def get_spectrum(self) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
         """Record a spectrum.

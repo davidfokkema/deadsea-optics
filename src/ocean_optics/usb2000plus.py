@@ -4,12 +4,15 @@ import libusb_package
 import numpy as np
 import plotext as plt
 import usb.core
-import usb.util
 from numpy.typing import NDArray
 
 
 class DeviceNotFoundError(Exception):
     """Raised when no compatible device is connected."""
+
+
+class SpectrumTimeOutError(Exception):
+    """Raised when a timeout occurs while reading a spectrum."""
 
 
 @dataclass
@@ -29,6 +32,10 @@ class OceanOpticsUSB2000Plus:
 
     _config: DeviceConfiguration
 
+    _ENDPOINT_OUT = 0x01
+    _ENDPOINT_IN_CMD = 0x81
+    _ENDPOINT_IN_SPECTRUM = 0x82
+
     def __init__(self) -> None:
         self.device = libusb_package.find(idVendor=0x2457, idProduct=0x101E)
         if self.device is None:
@@ -46,7 +53,7 @@ class OceanOpticsUSB2000Plus:
         self.clear_buffers()
 
         # Initialize device
-        self.device.write(0x01, b"\x01")
+        self.device.write(self._ENDPOINT_OUT, b"\x01")
         # Set default integration time
         self.set_integration_time(self._integration_time)
 
@@ -62,7 +69,9 @@ class OceanOpticsUSB2000Plus:
         Args:
             integration_time: The desired integration time in microseconds.
         """
-        self.device.write(0x01, b"\x02" + int(integration_time).to_bytes(4, "little"))
+        self.device.write(
+            self._ENDPOINT_OUT, b"\x02" + int(integration_time).to_bytes(4, "little")
+        )
         self._integration_time = integration_time
 
     def get_integration_time(self) -> int:
@@ -78,7 +87,7 @@ class OceanOpticsUSB2000Plus:
 
     def clear_buffers(self) -> None:
         """Clear buffers by reading from both IN endpoints."""
-        for endpoint in 0x81, 0x82:
+        for endpoint in self._ENDPOINT_IN_CMD, self._ENDPOINT_IN_SPECTRUM:
             try:
                 self.device.read(
                     endpoint=endpoint, size_or_buffer=1_000_000, timeout=100
@@ -129,8 +138,8 @@ class OceanOpticsUSB2000Plus:
             A string with the configuration value.
         """
         command = b"\x05" + index.to_bytes(1)
-        self.device.write(0x01, command)
-        value: bytes = self.device.read(0x81, 17).tobytes()
+        self.device.write(self._ENDPOINT_OUT, command)
+        value: bytes = self.device.read(self._ENDPOINT_IN_CMD, 17).tobytes()
         assert value[:2] == command
         # ignore everything after the first \x00 byte in the data range
         data = value[2 : value.find(b"\x00", 2)]
@@ -143,8 +152,8 @@ class OceanOpticsUSB2000Plus:
             The saturation level as an integer.
         """
         command = b"\x05\x11"
-        self.device.write(0x01, command)
-        data: bytes = self.device.read(0x81, 17).tobytes()
+        self.device.write(self._ENDPOINT_OUT, command)
+        data: bytes = self.device.read(self._ENDPOINT_IN_CMD, 17).tobytes()
         assert data[:2] == command
         return np.uint16(np.frombuffer(data[6:8], dtype=np.uint16)[0])
 
@@ -176,7 +185,7 @@ class OceanOpticsUSB2000Plus:
             wavelengths are in pixels and the intensity is in arbitrary
             uncalibrated units.
         """
-        self.device.write(0x01, b"\x09")
+        self.device.write(self._ENDPOINT_OUT, b"\x09")
         # Don't sleep, because the device will automatically acquire two
         # additional spectra which will be available sooner than acquiring a
         # fresh one.
@@ -187,13 +196,17 @@ class OceanOpticsUSB2000Plus:
         packets = []
         for _ in range(8):
             try:
-                packets.append(self.device.read(0x82, 512, timeout).tobytes())
+                packets.append(
+                    self.device.read(self._ENDPOINT_IN_SPECTRUM, 512, timeout).tobytes()
+                )
                 # after waiting for the first packet, next timeout can be short
                 timeout = 100
             except usb.core.USBTimeoutError:
                 break
         else:
-            packets.append(self.device.read(0x82, 1, 100).tobytes())
+            packets.append(
+                self.device.read(self._ENDPOINT_IN_SPECTRUM, 1, 100).tobytes()
+            )
         assert packets[-1][-1] == 0x69
 
         data = b"".join(packets[:-1])
@@ -201,15 +214,16 @@ class OceanOpticsUSB2000Plus:
 
     def set_shutdown_mode(self) -> None:
         """Set shutdown (low power) mode."""
-        self.device.write(0x01, b"\x04\x00\x00")
+        self.device.write(self._ENDPOINT_OUT, b"\x04\x00\x00")
 
 
 if __name__ == "__main__":
     dev = OceanOpticsUSB2000Plus()
 
-    x, data = dev.get_spectrum()
-    plt.clf()
-    plt.plot(x, [int(y) for y in data])
-    plt.show()
+    print(dev.device)
+    # x, data = dev.get_spectrum()
+    # plt.clf()
+    # plt.plot(x, [int(y) for y in data])
+    # plt.show()
 
-    print(dev.get_configuration())
+    # print(dev.get_configuration())

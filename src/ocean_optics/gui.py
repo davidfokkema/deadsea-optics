@@ -8,7 +8,11 @@ from numpy.typing import NDArray
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtCore import Slot
 
-from ocean_optics.spectroscopy import DeviceNotFoundError, SpectroscopyExperiment
+from ocean_optics.spectroscopy import (
+    DeviceNotFoundError,
+    SpectroscopyExperiment,
+    SpectrumTimeOutError,
+)
 from ocean_optics.ui_main_window import Ui_MainWindow
 
 # PyQtGraph global options
@@ -64,7 +68,10 @@ class ContinuousSpectrumWorker(MeasurementWorker):
     def run(self) -> None:
         self.stopped = False
         while True:
-            wavelengths, intensities = self.experiment.get_spectrum()
+            try:
+                wavelengths, intensities = self.experiment.get_spectrum()
+            except SpectrumTimeOutError:
+                continue
             self.new_data.emit(wavelengths, intensities)
             if self.stopped:
                 break
