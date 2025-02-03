@@ -53,6 +53,13 @@ class IntegrateSpectrumWorker(MeasurementWorker):
                 self.experiment.stopped = True
 
 
+class SingleSpectrumWorker(MeasurementWorker):
+    def run(self) -> None:
+        self.stopped = False
+        wavelengths, intensities = self.experiment.get_spectrum()
+        self.new_data.emit(wavelengths, intensities)
+
+
 class ContinuousSpectrumWorker(MeasurementWorker):
     def run(self) -> None:
         self.stopped = False
@@ -77,7 +84,7 @@ class UserInterface(QtWidgets.QMainWindow):
 
         # Slots and signals
         self.ui.integration_time.valueChanged.connect(self.set_integration_time)
-        self.ui.single_button.clicked.connect(self.single_measurement)
+        self.ui.single_button.clicked.connect(self.single_spectrum)
         self.ui.integrate_button.clicked.connect(self.integrate_spectrum)
         self.ui.continuous_button.clicked.connect(self.continuous_spectrum)
         self.ui.stop_button.clicked.connect(self.stop_measurement)
@@ -100,6 +107,11 @@ class UserInterface(QtWidgets.QMainWindow):
         self.integrate_spectrum_worker.new_data.connect(self.plot_new_data)
         self.integrate_spectrum_worker.progress.connect(self.update_progress_bar)
         self.integrate_spectrum_worker.finished.connect(self.worker_has_finished)
+        self.single_spectrum_worker = SingleSpectrumWorker()
+        self.single_spectrum_worker.new_data.connect(self.plot_new_data)
+        self.single_spectrum_worker.finished.connect(
+            self.single_spectrum_worker_has_finished
+        )
         self.continuous_spectrum_worker = ContinuousSpectrumWorker()
         self.continuous_spectrum_worker.new_data.connect(self.plot_new_data)
         self.continuous_spectrum_worker.finished.connect(self.worker_has_finished)
@@ -109,10 +121,12 @@ class UserInterface(QtWidgets.QMainWindow):
         self.experiment.set_integration_time(value)
 
     @Slot()
-    def single_measurement(self) -> None:
-        self.ui.progress_bar.setRange(0, 1)
-        wavelengths, intensities = self.experiment.get_spectrum()
-        self.plot_data(wavelengths, intensities)
+    def single_spectrum(self) -> None:
+        self.disable_measurement_buttons()
+        self.ui.progress_bar.setMinimum(0)
+        self.ui.progress_bar.setMaximum(0)
+        self.single_spectrum_worker.setup(experiment=self.experiment)
+        self.single_spectrum_worker.start()
 
     @Slot()
     def integrate_spectrum(self) -> None:
@@ -146,27 +160,28 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.stop_button.setEnabled(True)
 
     @Slot()
+    def single_spectrum_worker_has_finished(self) -> None:
+        self.worker_has_finished()
+        self.ui.progress_bar.setRange(0, 1)
+
+    @Slot()
     def worker_has_finished(self) -> None:
         self.ui.single_button.setEnabled(True)
         self.ui.integrate_button.setEnabled(True)
         self.ui.continuous_button.setEnabled(True)
         self.ui.stop_button.setEnabled(False)
 
-    def plot_data(
-        self, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
-    ) -> None:
-        self._wavelengths = wavelengths
-        self._intensities = intensities
+    def plot_data(self) -> None:
         self.ui.plot_widget.clear()
         if self._show_lines:
             self.ui.plot_widget.plot(
-                wavelengths, intensities, pen={"color": "k", "width": 5}
+                self._wavelengths, self._intensities, pen={"color": "k", "width": 5}
             )
 
         else:
             self.ui.plot_widget.plot(
-                wavelengths,
-                intensities,
+                self._wavelengths,
+                self._intensities,
                 symbol="o",
                 symbolSize=3,
                 symbolPen={"color": "k"},
@@ -181,7 +196,9 @@ class UserInterface(QtWidgets.QMainWindow):
     def plot_new_data(
         self, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
     ) -> None:
-        self.plot_data(wavelengths, intensities)
+        self._wavelengths = wavelengths
+        self._intensities = intensities
+        self.plot_data()
 
     @Slot()
     def toggle_lines_markers(self) -> None:
