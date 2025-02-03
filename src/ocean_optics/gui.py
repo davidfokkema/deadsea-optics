@@ -105,7 +105,7 @@ class UserInterface(QtWidgets.QMainWindow):
             msg = "Please connect a compatible device."
             if sys.platform == "win32":
                 msg += " Also make sure the device is registered as a WinUSB device, using device manager."
-            QtWidgets.QMessageBox.critical(self, "Device not found", msg)
+            QtWidgets.QMessageBox.critical(self, "Device not found", msg)  # type: ignore
             sys.exit()
         self.experiment.set_integration_time(self.ui.integration_time.value())
 
