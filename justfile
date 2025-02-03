@@ -1,3 +1,5 @@
+set windows-shell := ["cmd.exe", "/c"]
+
 venv:
     uv sync
 
