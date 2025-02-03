@@ -66,6 +66,7 @@ class ContinuousSpectrumWorker(MeasurementWorker):
 class UserInterface(QtWidgets.QMainWindow):
     _wavelengths: NDArray[np.floating] | None = None
     _intensities: NDArray[np.floating] | None = None
+    _show_lines: bool = True
 
     def __init__(self) -> None:
         super().__init__()
@@ -80,6 +81,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.integrate_button.clicked.connect(self.integrate_spectrum)
         self.ui.continuous_button.clicked.connect(self.continuous_spectrum)
         self.ui.stop_button.clicked.connect(self.stop_measurement)
+        self.ui.toggle_lines_button.clicked.connect(self.toggle_lines_markers)
         self.ui.save_button.clicked.connect(self.save_data)
 
         # Open device
@@ -156,9 +158,21 @@ class UserInterface(QtWidgets.QMainWindow):
         self._wavelengths = wavelengths
         self._intensities = intensities
         self.ui.plot_widget.clear()
-        self.ui.plot_widget.plot(
-            wavelengths, intensities, symbol=None, pen={"color": "k", "width": 5}
-        )
+        if self._show_lines:
+            self.ui.plot_widget.plot(
+                wavelengths, intensities, pen={"color": "k", "width": 5}
+            )
+
+        else:
+            self.ui.plot_widget.plot(
+                wavelengths,
+                intensities,
+                symbol="o",
+                symbolSize=3,
+                symbolPen={"color": "k"},
+                symbolBrush="k",
+                pen=None,
+            )
         self.ui.plot_widget.setLabel("left", "Intensity")
         self.ui.plot_widget.setLabel("bottom", "Wavelength (nm)")
         self.ui.plot_widget.setLimits(yMin=0)
@@ -168,6 +182,11 @@ class UserInterface(QtWidgets.QMainWindow):
         self, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
     ) -> None:
         self.plot_data(wavelengths, intensities)
+
+    @Slot()
+    def toggle_lines_markers(self) -> None:
+        self._show_lines = not self._show_lines
+        self.plot_data()
 
     @Slot(int)  # type: ignore
     def update_progress_bar(self, value: int) -> None:

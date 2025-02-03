@@ -14,106 +14,113 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="PlotWidget" name="plot_widget"/>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QPushButton" name="single_button">
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="integrationTimeSLabel">
           <property name="text">
-           <string>Single</string>
+           <string>Integration time (µs)</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="continuous_button">
-          <property name="text">
-           <string>Continuous</string>
+        <item row="0" column="1">
+         <widget class="QSpinBox" name="integration_time">
+          <property name="minimum">
+           <number>10000</number>
+          </property>
+          <property name="maximum">
+           <number>100000000</number>
+          </property>
+          <property name="singleStep">
+           <number>1000</number>
+          </property>
+          <property name="value">
+           <number>100000</number>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="integrate_button">
+        <item row="1" column="0">
+         <widget class="QLabel" name="integrationsLabel">
           <property name="text">
-           <string>Integrate</string>
+           <string># integrations</string>
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="stop_button">
-          <property name="text">
-           <string>Stop</string>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="num_integrations">
+          <property name="minimum">
+           <number>1</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="save_button">
-          <property name="text">
-           <string>Save data</string>
+          <property name="maximum">
+           <number>1000</number>
+          </property>
+          <property name="value">
+           <number>20</number>
           </property>
          </widget>
         </item>
        </layout>
       </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QProgressBar" name="progress_bar">
-        <property name="value">
-         <number>0</number>
+       <widget class="QPushButton" name="single_button">
+        <property name="text">
+         <string>Single</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="continuous_button">
+        <property name="text">
+         <string>Continuous</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="integrate_button">
+        <property name="text">
+         <string>Integrate</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="stop_button">
+        <property name="text">
+         <string>Stop</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="toggle_lines_button">
+        <property name="text">
+         <string>Toggle lines/markers</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="save_button">
+        <property name="text">
+         <string>Save data</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="integrationTimeSLabel">
-        <property name="text">
-         <string>Integration time (µs)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="integration_time">
-        <property name="minimum">
-         <number>10000</number>
-        </property>
-        <property name="maximum">
-         <number>100000000</number>
-        </property>
-        <property name="singleStep">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>100000</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="integrationsLabel">
-        <property name="text">
-         <string># integrations</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="num_integrations">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>20</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QProgressBar" name="progress_bar">
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
