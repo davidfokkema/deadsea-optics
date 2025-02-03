@@ -43,7 +43,6 @@ ignore_missing_imports = true
 [tool.briefcase]
 project_name = "Ocean Optics"
 bundle = "com.davidfokkema.ocean-optics"
-version = "0.0.1"
 url = "https://github.com/davidfokkema/ocean_optics"
 license.file = "LICENSE"
 author = "David Fokkema"

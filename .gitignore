@@ -3,3 +3,4 @@ __pycache__/
 *.log
 /src/ocean_optics.dist-info
 /build
+/dist
