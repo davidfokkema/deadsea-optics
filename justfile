@@ -16,3 +16,7 @@ fix:
 
 typecheck:
     uv run mypy -p ocean_optics --strict
+
+[working-directory: 'src/ocean_optics/resources']
+make-icons:
+    sh create_icons.sh

@@ -26,11 +26,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [dependency-groups]
-dev = [
-    "mypy>=1.14.1",
-    "pytest>=8.3.4",
- "rust-just>=1.38.0",
-]
+dev = ["mypy>=1.14.1", "pytest>=8.3.4", "rust-just>=1.38.0"]
 
 [tool.mypy]
 exclude = """(?x)(
@@ -60,6 +56,7 @@ long_description = """More details about the app should go here.
 """
 sources = ["src/ocean_optics"]
 test_sources = ["tests"]
+icon = "src/ocean_optics/resources/app_icon"
 
 requires = [
     # Add your cross-platform app requirements here

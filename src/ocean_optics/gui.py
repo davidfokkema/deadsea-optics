@@ -1,11 +1,12 @@
 import csv
 import sys
+from importlib import resources
 from typing import Any
 
 import numpy as np
 import pyqtgraph as pg
 from numpy.typing import NDArray
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Slot
 
 from ocean_optics.spectroscopy import (
@@ -88,6 +89,9 @@ class UserInterface(QtWidgets.QMainWindow):
         # Load UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore
+        self.setWindowIcon(
+            QtGui.QIcon(str(resources.files("ocean_optics.resources") / "app_icon.png"))
+        )
 
         # Slots and signals
         self.ui.integration_time.valueChanged.connect(self.set_integration_time)
