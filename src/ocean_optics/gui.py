@@ -89,9 +89,13 @@ class UserInterface(QtWidgets.QMainWindow):
         # Load UI
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)  # type: ignore
-        self.setWindowIcon(
-            QtGui.QIcon(str(resources.files("ocean_optics.resources") / "app_icon.png"))
-        )
+        if sys.platform == "win32":
+            # On Windows, you have to set app icon manually
+            self.setWindowIcon(
+                QtGui.QIcon(
+                    str(resources.files("ocean_optics.resources") / "app_icon.ico")
+                )
+            )
 
         # Slots and signals
         self.ui.integration_time.valueChanged.connect(self.set_integration_time)
