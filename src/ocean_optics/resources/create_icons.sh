@@ -20,7 +20,7 @@
     }
 
     Create_Win_Icons() {
-        input_filepath=$1.png
+        input_filepath=$1_win.png
         output_icon_name=$1.ico
         build_dir=build_ico
 
@@ -36,4 +36,4 @@
     }
 
     Create_Icons app_icon
-    Create_Win_Icons app_icon_win
+    Create_Win_Icons app_icon
