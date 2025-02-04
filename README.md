@@ -1,1 +1,1 @@
-# Spectrosopy software using an Ocean Optics 2000(+) spectrometer
+# Spectrosopy software using the legacy Ocean Optics 2000(+) spectrometer

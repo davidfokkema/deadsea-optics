@@ -1,7 +1,7 @@
 [project]
-name = "ocean-optics"
+name = "deadsea-optics"
 version = "0.1.0"
-description = "Spectrosopy software using an Ocean Optics 2000(+) spectrometer."
+description = "Spectrosopy software using the legacy Ocean Optics 2000(+) spectrometer."
 readme = "README.md"
 authors = [{ name = "David Fokkema", email = "davidfokkema@icloud.com" }]
 requires-python = ">=3.11"
@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.scripts]
-ocean-optics = "ocean_optics.cli:app"
+dso = "deadsea_optics.cli:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -30,7 +30,7 @@ dev = ["mypy>=1.14.1", "pytest>=8.3.4", "rust-just>=1.38.0"]
 
 [tool.mypy]
 exclude = """(?x)(
-        ocean_optics/ui_.*.py
+        deadsea_optics/ui_.*.py
     )"""
 
 [[tool.mypy.overrides]]
@@ -41,21 +41,21 @@ ignore_missing_imports = true
 # content below this line added by briefcase convert
 # This project was generated with 0.3.21 using template: https://github.com/beeware/briefcase-template@v0.3.21
 [tool.briefcase]
-project_name = "Ocean Optics"
-bundle = "com.davidfokkema.ocean-optics"
-url = "https://github.com/davidfokkema/ocean_optics"
+project_name = "DeadSea Optics"
+bundle = "com.davidfokkema.deadsea-optics"
+url = "https://github.com/davidfokkema/deadsea_optics"
 license.file = "LICENSE"
 author = "David Fokkema"
 author_email = "davidfokkema@icloud.com"
 
-[tool.briefcase.app.ocean-optics]
-formal_name = "Ocean Optics"
-description = "Spectrosopy software using an Ocean Optics 2000(+) spectrometer."
+[tool.briefcase.app.deadsea-optics]
+formal_name = "DeadSea Optics"
+description = "Spectrosopy software using the legacy Ocean Optics 2000(+) spectrometer."
 long_description = """More details about the app should go here.
 """
-sources = ["src/ocean_optics"]
+sources = ["src/deadsea_optics"]
 test_sources = ["tests"]
-icon = "src/ocean_optics/resources/app_icon"
+icon = "src/deadsea_optics/resources/app_icon"
 
 requires = [
     # Add your cross-platform app requirements here
@@ -64,18 +64,18 @@ test_requires = [
     # Add your cross-platform test requirements here
 ]
 
-[tool.briefcase.app.ocean-optics.macOS]
+[tool.briefcase.app.deadsea-optics.macOS]
 universal_build = true
 requires = [
     # Add your macOS-specific app requirements here
 ]
 
-[tool.briefcase.app.ocean-optics.linux]
+[tool.briefcase.app.deadsea-optics.linux]
 requires = [
     # Add your Linux-specific app requirements here
 ]
 
-[tool.briefcase.app.ocean-optics.linux.system.debian]
+[tool.briefcase.app.deadsea-optics.linux.system.debian]
 system_requires = [
     # Add any system packages needed at build the app here
 ]
@@ -84,7 +84,7 @@ system_runtime_requires = [
     # Add any system packages needed at runtime here
 ]
 
-[tool.briefcase.app.ocean-optics.linux.system.rhel]
+[tool.briefcase.app.deadsea-optics.linux.system.rhel]
 system_requires = [
     # Add any system packages needed at build the app here
 ]
@@ -93,7 +93,7 @@ system_runtime_requires = [
     # Add any system packages needed at runtime here
 ]
 
-[tool.briefcase.app.ocean-optics.linux.system.suse]
+[tool.briefcase.app.deadsea-optics.linux.system.suse]
 system_requires = [
     # Add any system packages needed at build the app here
 ]
@@ -102,7 +102,7 @@ system_runtime_requires = [
     # Add any system packages needed at runtime here
 ]
 
-[tool.briefcase.app.ocean-optics.linux.system.arch]
+[tool.briefcase.app.deadsea-optics.linux.system.arch]
 system_requires = [
     # Add any system packages needed at build the app here
 ]
@@ -111,29 +111,29 @@ system_runtime_requires = [
     # Add any system packages needed at runtime here
 ]
 
-[tool.briefcase.app.ocean-optics.linux.flatpak]
+[tool.briefcase.app.deadsea-optics.linux.flatpak]
 flatpak_runtime = "org.freedesktop.Platform"
 flatpak_runtime_version = "24.08"
 flatpak_sdk = "org.freedesktop.Sdk"
 
-[tool.briefcase.app.ocean-optics.windows]
+[tool.briefcase.app.deadsea-optics.windows]
 requires = [
     # Add your Windows-specific app requirements here
 ]
 
 # Mobile deployments
-[tool.briefcase.app.ocean-optics.iOS]
+[tool.briefcase.app.deadsea-optics.iOS]
 requires = [
     # Add your iOS-specific app requirements here
 ]
 
-[tool.briefcase.app.ocean-optics.android]
+[tool.briefcase.app.deadsea-optics.android]
 requires = [
     # Add your Android-specific app requirements here
 ]
 
 # Web deployments
-[tool.briefcase.app.ocean-optics.web]
+[tool.briefcase.app.deadsea-optics.web]
 requires = [
     # Add your web-specific app requirements here
 ]

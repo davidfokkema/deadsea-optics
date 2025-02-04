@@ -1,17 +1,16 @@
 import csv
 from typing import Annotated, TextIO
 
+import deadsea_optics.gui
 import matplotlib.pyplot as plt
 import numpy as np
 import plotext
 import typer
+from deadsea_optics.spectroscopy import DeviceNotFoundError, SpectroscopyExperiment
 from numpy.typing import NDArray
 from rich import print
 from rich.progress import track
 from rich.table import Table
-
-import ocean_optics.gui
-from ocean_optics.spectroscopy import DeviceNotFoundError, SpectroscopyExperiment
 
 app = typer.Typer()
 
@@ -185,7 +184,7 @@ def integrate(
 @app.command()
 def gui() -> None:
     """Run the GUI spectroscopy application."""
-    ocean_optics.gui.main()
+    deadsea_optics.gui.main()
 
 
 def open_experiment() -> SpectroscopyExperiment:
@@ -197,7 +196,7 @@ def open_experiment() -> SpectroscopyExperiment:
         typer.Abort: An error occured opening the experiment.
 
     Returns:
-        An `ocean_optics.Spectroscopy` instance.
+        An `deadsea_optics.Spectroscopy` instance.
     """
     try:
         experiment = SpectroscopyExperiment()

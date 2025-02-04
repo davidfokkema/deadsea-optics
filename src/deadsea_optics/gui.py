@@ -5,16 +5,15 @@ from typing import Any
 
 import numpy as np
 import pyqtgraph as pg
-from numpy.typing import NDArray
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtCore import Slot
-
-from ocean_optics.spectroscopy import (
+from deadsea_optics.spectroscopy import (
     DeviceNotFoundError,
     SpectroscopyExperiment,
     SpectrumTimeOutError,
 )
-from ocean_optics.ui_main_window import Ui_MainWindow
+from deadsea_optics.ui_main_window import Ui_MainWindow
+from numpy.typing import NDArray
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtCore import Slot
 
 # PyQtGraph global options
 pg.setConfigOption("background", "w")
@@ -93,7 +92,7 @@ class UserInterface(QtWidgets.QMainWindow):
             # On Windows, you have to set app icon manually
             self.setWindowIcon(
                 QtGui.QIcon(
-                    str(resources.files("ocean_optics.resources") / "app_icon.ico")
+                    str(resources.files("deadsea_optics.resources") / "app_icon.ico")
                 )
             )
 

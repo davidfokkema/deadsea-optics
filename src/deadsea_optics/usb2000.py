@@ -2,13 +2,12 @@ import libusb_package
 import numpy as np
 import plotext as plt
 import usb.core
-from numpy.typing import NDArray
-
-from ocean_optics.usb2000plus import (
+from deadsea_optics.usb2000plus import (
     DeviceNotFoundError,
     OceanOpticsUSB2000Plus,
     SpectrumTimeOutError,
 )
+from numpy.typing import NDArray
 
 
 class OceanOpticsUSB2000(OceanOpticsUSB2000Plus):

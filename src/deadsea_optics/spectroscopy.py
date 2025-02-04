@@ -1,14 +1,13 @@
 from typing import Iterator
 
 import numpy as np
-from numpy.typing import NDArray
-
-from ocean_optics.usb2000 import OceanOpticsUSB2000
-from ocean_optics.usb2000plus import (
+from deadsea_optics.usb2000 import OceanOpticsUSB2000
+from deadsea_optics.usb2000plus import (
     DeviceNotFoundError,
     OceanOpticsUSB2000Plus,
     SpectrumTimeOutError,
 )
+from numpy.typing import NDArray
 
 __all__ = ["DeviceNotFoundError", "SpectroscopyExperiment", "SpectrumTimeOutError"]
 
