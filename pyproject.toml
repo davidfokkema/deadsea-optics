@@ -1,7 +1,7 @@
 [project]
 name = "deadsea-optics"
 version = "0.1.0"
-description = "Spectrosopy software using the legacy Ocean Optics 2000(+) spectrometer."
+description = "Spectrosopy software using the legacy Ocean Optics USB2000(+) spectrometer."
 readme = "README.md"
 authors = [{ name = "David Fokkema", email = "davidfokkema@icloud.com" }]
 requires-python = ">=3.11"
@@ -19,6 +19,7 @@ dependencies = [
 ]
 
 [project.scripts]
+deadsea-optics = "deadsea_optics.cli:app"
 dso = "deadsea_optics.cli:app"
 
 [build-system]
@@ -50,7 +51,7 @@ author_email = "davidfokkema@icloud.com"
 
 [tool.briefcase.app.deadsea-optics]
 formal_name = "DeadSea Optics"
-description = "Spectrosopy software using the legacy Ocean Optics 2000(+) spectrometer."
+description = "Spectrosopy software using the legacy Ocean Optics USB2000(+) spectrometer."
 long_description = """More details about the app should go here.
 """
 sources = ["src/deadsea_optics"]
