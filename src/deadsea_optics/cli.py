@@ -1,16 +1,21 @@
 import csv
 from typing import Annotated, TextIO
 
-import deadsea_optics.gui
 import matplotlib.pyplot as plt
 import numpy as np
 import plotext
 import typer
-from deadsea_optics.spectroscopy import DeviceNotFoundError, SpectroscopyExperiment
 from numpy.typing import NDArray
 from rich import print
 from rich.progress import track
 from rich.table import Table
+
+import deadsea_optics.gui
+from deadsea_optics.spectroscopy import (
+    AccessError,
+    DeviceNotFoundError,
+    SpectroscopyExperiment,
+)
 
 app = typer.Typer()
 
@@ -18,12 +23,8 @@ app = typer.Typer()
 @app.command()
 def check() -> None:
     """Check if a compatible device can be found."""
-    try:
-        SpectroscopyExperiment()
-    except DeviceNotFoundError:
-        print("[red]No compatible device found.")
-    else:
-        print("[green]Device is connected and available.")
+    open_experiment()
+    print("[green]Device is connected and available.")
 
 
 @app.command()
@@ -202,6 +203,9 @@ def open_experiment() -> SpectroscopyExperiment:
         experiment = SpectroscopyExperiment()
     except DeviceNotFoundError:
         print("[red]No compatible device found.")
+        raise typer.Abort()
+    except AccessError as exc:
+        print(f"[red]Error accessing device: {exc}.")
         raise typer.Abort()
     return experiment
 

@@ -12,6 +12,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtCore import Slot
 
 from deadsea_optics.spectroscopy import (
+    AccessError,
     DeviceNotFoundError,
     SpectroscopyExperiment,
     SpectrumTimeOutError,
@@ -122,11 +123,15 @@ class UserInterface(QtWidgets.QMainWindow):
         # Open device
         try:
             self.experiment = SpectroscopyExperiment()
-        except DeviceNotFoundError:
-            msg = "Please connect a compatible device."
+        except (DeviceNotFoundError, AccessError) as exc:
+            msg = "Please connect a compatible device. "
             if sys.platform == "win32":
-                msg += " Also make sure the device is registered as a WinUSB device, using device manager."
-            QtWidgets.QMessageBox.critical(self, "Device not found", msg)  # type: ignore
+                msg += "Also make sure the device is registered as a WinUSB device, using device manager. For details, please visit <a href='https://github.com/davidfokkema/deadsea_optics'>https://github.com/davidfokkema/deadsea_optics</a>. "
+            if error_msg := str(exc):
+                msg += f"The error was: {error_msg}."
+            QtWidgets.QMessageBox.critical(
+                self, "Device not found or inaccessible", msg
+            )  # type: ignore
             sys.exit()
         self.experiment.set_integration_time(self.ui.integration_time.value())
 

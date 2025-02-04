@@ -1,15 +1,22 @@
 from typing import Iterator
 
 import numpy as np
+from numpy.typing import NDArray
+
 from deadsea_optics.usb2000 import OceanOpticsUSB2000
 from deadsea_optics.usb2000plus import (
+    AccessError,
     DeviceNotFoundError,
     OceanOpticsUSB2000Plus,
     SpectrumTimeOutError,
 )
-from numpy.typing import NDArray
 
-__all__ = ["DeviceNotFoundError", "SpectroscopyExperiment", "SpectrumTimeOutError"]
+__all__ = [
+    "AccessError",
+    "DeviceNotFoundError",
+    "SpectroscopyExperiment",
+    "SpectrumTimeOutError",
+]
 
 
 class SpectroscopyExperiment:

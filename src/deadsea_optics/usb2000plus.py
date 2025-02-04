@@ -11,6 +11,10 @@ class DeviceNotFoundError(Exception):
     """Raised when no compatible device is connected."""
 
 
+class AccessError(Exception):
+    """Raised when the device cannot be accessed."""
+
+
 class SpectrumTimeOutError(Exception):
     """Raised when a timeout occurs while reading a spectrum."""
 
@@ -57,6 +61,8 @@ class OceanOpticsUSB2000Plus:
         except NotImplementedError:
             # Device was opened, but is not functional
             raise DeviceNotFoundError()
+        except usb.core.USBError as exc:
+            raise AccessError(exc)
 
         # Initialize device
         self.device.write(self._ENDPOINT_OUT, b"\x01")

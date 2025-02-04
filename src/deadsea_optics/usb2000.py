@@ -2,12 +2,14 @@ import libusb_package
 import numpy as np
 import plotext as plt
 import usb.core
+from numpy.typing import NDArray
+
 from deadsea_optics.usb2000plus import (
+    AccessError,
     DeviceNotFoundError,
     OceanOpticsUSB2000Plus,
     SpectrumTimeOutError,
 )
-from numpy.typing import NDArray
 
 
 class OceanOpticsUSB2000(OceanOpticsUSB2000Plus):
@@ -34,6 +36,8 @@ class OceanOpticsUSB2000(OceanOpticsUSB2000Plus):
         except NotImplementedError:
             # Device was opened, but is not functional
             raise DeviceNotFoundError()
+        except usb.core.USBError as exc:
+            raise AccessError(exc)
 
         # Initialize device
         self.device.write(self._ENDPOINT_OUT, b"\x01")
