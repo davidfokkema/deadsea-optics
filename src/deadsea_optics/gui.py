@@ -114,6 +114,9 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.stop_button.clicked.connect(self.stop_measurement)
         self.ui.toggle_lines_button.clicked.connect(self.toggle_lines_markers)
         self.ui.save_button.clicked.connect(self.save_data)
+
+        # Menu actions
+        self.ui.actionQuit.triggered.connect(self.close)
         self.ui.actionAbout_DeadSea_Optics.triggered.connect(self.show_about_dialog)
 
         # Open device

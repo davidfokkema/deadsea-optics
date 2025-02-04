@@ -34,6 +34,8 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.actionAbout_DeadSea_Optics = QAction(MainWindow)
         self.actionAbout_DeadSea_Optics.setObjectName("actionAbout_DeadSea_Optics")
+        self.actionQuit = QAction(MainWindow)
+        self.actionQuit.setObjectName("actionQuit")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -124,13 +126,17 @@ class Ui_MainWindow(object):
         self.menubar.setGeometry(QRect(0, 0, 800, 37))
         self.menuHelp = QMenu(self.menubar)
         self.menuHelp.setObjectName("menuHelp")
+        self.menuFile = QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
         self.menuHelp.addAction(self.actionAbout_DeadSea_Optics)
+        self.menuFile.addAction(self.actionQuit)
 
         self.retranslateUi(MainWindow)
 
@@ -145,6 +151,7 @@ class Ui_MainWindow(object):
         self.actionAbout_DeadSea_Optics.setText(
             QCoreApplication.translate("MainWindow", "About DeadSea Optics", None)
         )
+        self.actionQuit.setText(QCoreApplication.translate("MainWindow", "Quit", None))
         self.integrationTimeSLabel.setText(
             QCoreApplication.translate("MainWindow", "Integration time (\u00b5s)", None)
         )
@@ -168,5 +175,6 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Save data", None)
         )
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", "Help", None))
+        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", "File", None))
 
     # retranslateUi
