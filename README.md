@@ -1,6 +1,6 @@
 # DeadSea Optics: Spectrosopy software using the legacy Ocean Optics USB2000(+) spectrometer
 
-The Ocean Optics spectroscopy devices are excellent to determine the spectrum of a light source. For older devices, however, the original software does not run on modern operating systems. New software can be expensive, and for many use cases the advances features of the software are not needed.
+The Ocean Optics spectroscopy devices are excellent to determine the spectrum of a light source. For older devices, however, the original software does not run on modern operating systems. New software can be expensive, and for many use cases the advanced features of the software are not needed.
 
 Using information from old documents we built applications for working with the Ocean Optics USB2000 and USB2000+ devices. The software consists of a command-line interface, `dso`, and a graphical user interface, _DeadSea Optics_.
 
@@ -38,7 +38,7 @@ From the command line, the GUI application can be started with
 ```
 dso gui
 ```
-To check that a compatible device is available, run
+The command-line interface is perfect to do a quick measurement and write the data to a CSV file, or to perform multiple measurements with the exact same parameters. To check that a compatible device is available, run
 ```
 dso check
 ```
@@ -50,11 +50,15 @@ Quite a few options are available. For an overview, run
 ```
 dso spectrum --help
 ```
-To integrate over multiple spectra, run
+For example, to perform a measurement with an integration time of 0.5 seconds and write the data to a file without showing a graph or table, type
+```
+dso spectrum -t 500_000 -q -o data.csv
+```
+where the underscores in the number are entirely optional. To integrate over multiple spectra, run
 ```
 dso integrate
 ```
-which has many of the same options, and an extra to provide the number of measurements.
+which has many of the same options, and one extra to provide the number of measurements.
 
 ## Helpdesk
 
