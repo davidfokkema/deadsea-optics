@@ -1,19 +1,26 @@
 import csv
+import importlib.metadata
+import importlib.resources
 import sys
-from importlib import resources
+from textwrap import dedent
 from typing import Any
 
 import numpy as np
 import pyqtgraph as pg
+from numpy.typing import NDArray
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtCore import Slot
+
 from deadsea_optics.spectroscopy import (
     DeviceNotFoundError,
     SpectroscopyExperiment,
     SpectrumTimeOutError,
 )
 from deadsea_optics.ui_main_window import Ui_MainWindow
-from numpy.typing import NDArray
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtCore import Slot
+
+metadata = importlib.metadata.metadata("deadsea_optics")
+__name__ = metadata["name"]
+__version__ = metadata["version"]
 
 # PyQtGraph global options
 pg.setConfigOption("background", "w")
@@ -92,7 +99,10 @@ class UserInterface(QtWidgets.QMainWindow):
             # On Windows, you have to set app icon manually
             self.setWindowIcon(
                 QtGui.QIcon(
-                    str(resources.files("deadsea_optics.resources") / "app_icon.ico")
+                    str(
+                        importlib.resources.files("deadsea_optics.resources")
+                        / "app_icon.ico"
+                    )
                 )
             )
 
@@ -104,6 +114,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.stop_button.clicked.connect(self.stop_measurement)
         self.ui.toggle_lines_button.clicked.connect(self.toggle_lines_markers)
         self.ui.save_button.clicked.connect(self.save_data)
+        self.ui.actionAbout_DeadSea_Optics.triggered.connect(self.show_about_dialog)
 
         # Open device
         try:
@@ -245,6 +256,25 @@ class UserInterface(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.information(
                 self, "Data saved", f"Data saved successfully to {path}."
             )
+
+    def show_about_dialog(self):
+        """Show about application dialog."""
+        box = QtWidgets.QMessageBox(parent=self)
+        box.setText("DeadSea Optics")
+        box.setInformativeText(
+            dedent(
+                f"""
+            <p>Version {__version__}.</p>
+
+            <p>DeadSea Optics is written by David Fokkema for use in the physics lab courses at the Vrije Universiteit Amsterdam and the University of Amsterdam.</p>
+
+            <p>DeadSea Optics is free software licensed under the GNU General Public License v3.0 or later.</p>
+
+            <p>For more information, please visit:<br><a href="https://github.com/davidfokkema/deadsea_optics">https://github.com/davidfokkema/deadsea_optics</a></p>
+        """
+            )
+        )
+        box.exec()
 
 
 def main() -> None:
