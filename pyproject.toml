@@ -1,6 +1,6 @@
 [project]
 name = "deadsea-optics"
-version = "0.1.0"
+version = "1.0.0"
 description = "Spectrosopy software using the legacy Ocean Optics USB2000(+) spectrometer."
 readme = "README.md"
 authors = [{ name = "David Fokkema", email = "davidfokkema@icloud.com" }]

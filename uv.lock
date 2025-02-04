@@ -246,6 +246,51 @@ wheels = [
 ]
 
 [[package]]
+name = "deadsea-optics"
+version = "1.0.0"
+source = { editable = "." }
+dependencies = [
+    { name = "briefcase" },
+    { name = "libusb-package" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "plotext" },
+    { name = "pyqtgraph" },
+    { name = "pyside6-essentials" },
+    { name = "pyusb" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "rust-just" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "briefcase", specifier = ">=0.3.21" },
+    { name = "libusb-package", specifier = ">=1.0.26.2" },
+    { name = "matplotlib", specifier = ">=3.10.0" },
+    { name = "numpy", specifier = ">=2.2.1" },
+    { name = "plotext", specifier = ">=5.3.2" },
+    { name = "pyqtgraph", specifier = ">=0.13.7" },
+    { name = "pyside6-essentials", specifier = ">=6.8.1.1" },
+    { name = "pyusb", specifier = ">=1.3.1" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "typer", specifier = ">=0.15.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = ">=1.14.1" },
+    { name = "pytest", specifier = ">=8.3.4" },
+    { name = "rust-just", specifier = ">=1.38.0" },
+]
+
+[[package]]
 name = "dmgbuild"
 version = "1.6.4"
 source = { registry = "https://pypi.org/simple" }
@@ -696,51 +741,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f1/ff/94a4ce67ea909f41cf7ea712aebbe832dc67decad22944a1020bb398a5ee/numpy-2.2.1-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:26c9c4382b19fcfbbed3238a14abf7ff223890ea1936b8890f058e7ba35e8d71", size = 17852844 },
     { url = "https://files.pythonhosted.org/packages/46/72/8a5dbce4020dfc595592333ef2fbb0a187d084ca243b67766d29d03e0096/numpy-2.2.1-cp313-cp313t-win32.whl", hash = "sha256:93cf4e045bae74c90ca833cba583c14b62cb4ba2cba0abd2b141ab52548247e2", size = 6326007 },
     { url = "https://files.pythonhosted.org/packages/7b/9c/4fce9cf39dde2562584e4cfd351a0140240f82c0e3569ce25a250f47037d/numpy-2.2.1-cp313-cp313t-win_amd64.whl", hash = "sha256:bff7d8ec20f5f42607599f9994770fa65d76edca264a87b5e4ea5629bce12268", size = 12693107 },
-]
-
-[[package]]
-name = "deadsea-optics"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "briefcase" },
-    { name = "libusb-package" },
-    { name = "matplotlib" },
-    { name = "numpy" },
-    { name = "plotext" },
-    { name = "pyqtgraph" },
-    { name = "pyside6-essentials" },
-    { name = "pyusb" },
-    { name = "rich" },
-    { name = "typer" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pytest" },
-    { name = "rust-just" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "briefcase", specifier = ">=0.3.21" },
-    { name = "libusb-package", specifier = ">=1.0.26.2" },
-    { name = "matplotlib", specifier = ">=3.10.0" },
-    { name = "numpy", specifier = ">=2.2.1" },
-    { name = "plotext", specifier = ">=5.3.2" },
-    { name = "pyqtgraph", specifier = ">=0.13.7" },
-    { name = "pyside6-essentials", specifier = ">=6.8.1.1" },
-    { name = "pyusb", specifier = ">=1.3.1" },
-    { name = "rich", specifier = ">=13.9.4" },
-    { name = "typer", specifier = ">=0.15.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy", specifier = ">=1.14.1" },
-    { name = "pytest", specifier = ">=8.3.4" },
-    { name = "rust-just", specifier = ">=1.38.0" },
 ]
 
 [[package]]
