@@ -149,6 +149,14 @@ class UserInterface(QtWidgets.QMainWindow):
         self.continuous_spectrum_worker.new_data.connect(self.plot_new_data)
         self.continuous_spectrum_worker.finished.connect(self.worker_has_finished)
 
+    def closeEvent(self, event):
+        self.single_spectrum_worker.stop()
+        self.continuous_spectrum_worker.stop()
+        self.integrate_spectrum_worker.stop()
+        self.single_spectrum_worker.wait()
+        self.continuous_spectrum_worker.wait()
+        self.integrate_spectrum_worker.wait()
+
     @Slot(int)  # type: ignore
     def set_integration_time(self, value: int) -> None:
         self.experiment.set_integration_time(value)
