@@ -25,6 +25,10 @@ You can also run the application directly using `uvx` or `uv tool run`:
 ```
 uvx deadsea-optics
 ```
+and even start the GUI directly, without installing, using
+```
+uvx deadsea-optics gui
+```
 
 ## Usage
 
