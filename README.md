@@ -10,7 +10,24 @@ Using information from old documents we built applications for working with the 
 
 ## Installation
 
-The latest version is always available on the [Releases page](<https://github.com/davidfokkema/deadsea-optics/releases/latest>) (link is also in the right sidebar). Please scroll down to *Assets* and download the .msi-installer for Windows and the .dmg-installer for macOS.
+The latest version is always available on the [Releases page](<https://github.com/davidfokkema/deadsea-optics/releases/latest>) (link is also in the right sidebar). Please scroll down to *Assets* and download the .msi-installer for Windows and the .dmg-installer for macOS. The application will also run on Linux, but no installer packages are provided at this moment. For Linux, follow the instructions below to install the command-line interface and optionally start the GUI using the provided `gui` command.
+
+## Driver installation on Windows
+
+DeadSea Optics needs a driver to access the Ocean Optics USB device on Windows. The generic WinUSB device is sufficient, but it is unfortunately necessary to manually select that driver using administrator privileges.
+
+1. Connect the Device: Plug your USB device into your computer.
+2. Open Device Manager: Press Win + X and select Device Manager.
+4. Locate your Ocean Optics USB device. It might be listed under "Other devices" with a yellow warning icon.
+5. Right-click on the device and select Update driver.
+6. Choose Browse my computer for driver software.
+7. Select Let me pick from a list of available drivers on my computer.
+8. Scroll down and select Universal Serial Bus devices.
+9. From the list, choose WinUSB Device in both the left column (Manufacturer) and right column (Model) and click Next.
+
+Your device should now be available to applications like DeadSea Optics.
+
+## Command-line interface
 
 If you want to use the command-line interface, you can install using pip, pipx or, recommended, [uv](https://docs.astral.sh/uv/getting-started/installation/):
 ```
@@ -19,7 +36,7 @@ pipx install deadsea-optics
 ```
 uv tool install deadsea-optics
 ```
-This provides the `deadsea-optics` and the `dso` commands. Both commands are identical.
+This provides the identical `deadsea-optics` and `dso` commands.
 
 You can also run the application directly using `uvx` or `uv tool run`:
 ```
