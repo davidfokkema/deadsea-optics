@@ -26,7 +26,7 @@ class SpectroscopyExperiment:
     def __init__(self) -> None:
         try:
             self.device = OceanOpticsUSB2000Plus()
-        except DeviceNotFoundError:
+        except (DeviceNotFoundError, AccessError):
             self.device = OceanOpticsUSB2000()
 
     def get_spectrum(self) -> tuple[NDArray[np.floating], NDArray[np.floating]]:
