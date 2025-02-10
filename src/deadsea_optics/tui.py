@@ -5,6 +5,7 @@ from numpy.typing import NDArray
 from textual import on, work
 from textual.app import App, ComposeResult
 from textual.message import Message
+from textual.widgets import Footer, Header
 from textual.worker import Worker, get_current_worker
 from textual_plot.plot_widget import HiResMode, PlotWidget
 
@@ -12,6 +13,8 @@ from deadsea_optics import SpectroscopyExperiment
 
 
 class MyApp(App[None]):
+    AUTO_FOCUS = "PlotWidget"
+
     @dataclass
     class NewSpectrum(Message):
         wavelengths: NDArray[np.floating]
@@ -20,6 +23,8 @@ class MyApp(App[None]):
     spectrum_worker: Worker | None = None
 
     def compose(self) -> ComposeResult:
+        yield Header()
+        yield Footer()
         yield PlotWidget()
 
     def on_mount(self) -> None:
@@ -33,6 +38,7 @@ class MyApp(App[None]):
     def get_spectra(self) -> None:
         worker = get_current_worker()
         experiment = SpectroscopyExperiment()
+        experiment.set_integration_time(1_000_000)
         while True:
             wavelengths, intensities = experiment.get_spectrum()
             if worker.is_cancelled:
@@ -47,8 +53,9 @@ class MyApp(App[None]):
         plot = self.query_one(PlotWidget)
         plot.clear()
         plot.plot(event.wavelengths, event.intensities, hires_mode=HiResMode.BRAILLE)
-        plot.set_xlimits(min(event.wavelengths), max(event.wavelengths))
-        plot.set_ylimits(0, max(event.intensities))
+        plot.set_ylimits(ymin=0)
+        plot.set_xlabel("Wavelength (nm)")
+        plot.set_ylabel("Intensity")
 
 
 MyApp().run()
