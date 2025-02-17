@@ -1,0 +1,8 @@
+Screen {
+    align: center middle;
+}
+
+PlotWidget {
+    width: 80;
+    height: 20;
+}

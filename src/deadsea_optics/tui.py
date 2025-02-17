@@ -1,3 +1,4 @@
+import itertools
 from dataclasses import dataclass
 
 import numpy as np
@@ -14,6 +15,15 @@ from deadsea_optics import SpectroscopyExperiment
 
 class MyApp(App[None]):
     AUTO_FOCUS = "PlotWidget"
+
+    CSS_PATH = "tui.tcss"
+
+    BINDINGS = [("m", "cycle_modes", "Cycle Modes")]
+
+    _hires_modes = itertools.cycle(
+        [HiResMode.QUADRANT, HiResMode.BRAILLE, None, HiResMode.HALFBLOCK]
+    )
+    hires_mode = next(_hires_modes)
 
     @dataclass
     class NewSpectrum(Message):
@@ -49,13 +59,22 @@ class MyApp(App[None]):
                 )
 
     @on(NewSpectrum)
-    def plot_spectrum(self, event: NewSpectrum):
+    def handle_new_data(self, event: NewSpectrum):
+        self.wavelengths = event.wavelengths
+        self.intensities = event.intensities
+        self.plot_spectrum()
+
+    def plot_spectrum(self) -> None:
         plot = self.query_one(PlotWidget)
         plot.clear()
-        plot.plot(event.wavelengths, event.intensities, hires_mode=HiResMode.BRAILLE)
+        plot.plot(self.wavelengths, self.intensities, hires_mode=self.hires_mode)
         plot.set_ylimits(ymin=0)
         plot.set_xlabel("Wavelength (nm)")
         plot.set_ylabel("Intensity")
+
+    def action_cycle_modes(self) -> None:
+        self.hires_mode = next(self._hires_modes)
+        self.plot_spectrum()
 
 
 def main() -> None:
