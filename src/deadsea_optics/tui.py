@@ -58,4 +58,9 @@ class MyApp(App[None]):
         plot.set_ylabel("Intensity")
 
 
-MyApp().run()
+def main() -> None:
+    MyApp().run()
+
+
+if __name__ == "__main__":
+    main()

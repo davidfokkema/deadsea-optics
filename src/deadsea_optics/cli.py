@@ -11,6 +11,7 @@ from rich.progress import track
 from rich.table import Table
 
 import deadsea_optics.gui
+import deadsea_optics.tui
 from deadsea_optics.spectroscopy import (
     AccessError,
     DeviceNotFoundError,
@@ -186,6 +187,12 @@ def integrate(
 def gui() -> None:
     """Run the GUI spectroscopy application."""
     deadsea_optics.gui.main()
+
+
+@app.command()
+def tui() -> None:
+    """Run the TUI spectroscopy application."""
+    deadsea_optics.tui.main()
 
 
 def open_experiment() -> SpectroscopyExperiment:
