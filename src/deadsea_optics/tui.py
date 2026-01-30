@@ -52,7 +52,7 @@ class DeadSeaOpticsApp(App[None]):
     def get_spectra(self) -> None:
         worker = get_current_worker()
         experiment = SpectroscopyExperiment()
-        experiment.set_integration_time(200_000)
+        experiment.set_integration_time(100_000)
         while True:
             wavelengths, intensities = experiment.get_spectrum()
             if worker.is_cancelled:
