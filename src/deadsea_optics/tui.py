@@ -13,7 +13,7 @@ from textual_plot.plot_widget import HiResMode, PlotWidget
 from deadsea_optics import SpectroscopyExperiment
 
 
-class MyApp(App[None]):
+class DeadSeaOpticsApp(App[None]):
     AUTO_FOCUS = "PlotWidget"
 
     CSS_PATH = "tui.tcss"
@@ -77,8 +77,11 @@ class MyApp(App[None]):
         self.plot_spectrum()
 
 
+app = DeadSeaOpticsApp
+
+
 def main() -> None:
-    MyApp().run()
+    app().run()
 
 
 if __name__ == "__main__":
