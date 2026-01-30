@@ -38,6 +38,10 @@ class DeadSeaOpticsApp(App[None]):
         yield PlotWidget()
 
     def on_mount(self) -> None:
+        plot = self.query_one(PlotWidget)
+        plot.set_ylimits(ymin=0)
+        plot.set_xlabel("Wavelength (nm)")
+        plot.set_ylabel("Intensity")
         self.spectrum_worker = self.get_spectra()
 
     def on_unmount(self) -> None:
@@ -68,9 +72,6 @@ class DeadSeaOpticsApp(App[None]):
         plot = self.query_one(PlotWidget)
         plot.clear()
         plot.plot(self.wavelengths, self.intensities, hires_mode=self.hires_mode)
-        plot.set_ylimits(ymin=0)
-        plot.set_xlabel("Wavelength (nm)")
-        plot.set_ylabel("Intensity")
 
     def action_cycle_modes(self) -> None:
         self.hires_mode = next(self._hires_modes)
