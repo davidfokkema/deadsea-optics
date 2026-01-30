@@ -30,7 +30,7 @@ class DeadSeaOpticsApp(App[None]):
         wavelengths: NDArray[np.floating]
         intensities: NDArray[np.floating]
 
-    spectrum_worker: Worker | None = None
+    spectrum_worker: Worker[None] | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -59,7 +59,7 @@ class DeadSeaOpticsApp(App[None]):
                 )
 
     @on(NewSpectrum)
-    def handle_new_data(self, event: NewSpectrum):
+    def handle_new_data(self, event: NewSpectrum) -> None:
         self.wavelengths = event.wavelengths
         self.intensities = event.intensities
         self.plot_spectrum()

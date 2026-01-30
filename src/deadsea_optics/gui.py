@@ -131,7 +131,7 @@ class UserInterface(QtWidgets.QMainWindow):
                 msg += f"The error was: {error_msg}."
             QtWidgets.QMessageBox.critical(
                 self, "Device not found or inaccessible", msg
-            )  # type: ignore
+            )
             sys.exit()
         self.experiment.set_integration_time(self.ui.integration_time.value())
 
@@ -149,7 +149,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.continuous_spectrum_worker.new_data.connect(self.plot_new_data)
         self.continuous_spectrum_worker.finished.connect(self.worker_has_finished)
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: Any) -> None:
         self.single_spectrum_worker.stop()
         self.continuous_spectrum_worker.stop()
         self.integrate_spectrum_worker.stop()
@@ -157,7 +157,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.continuous_spectrum_worker.wait()
         self.integrate_spectrum_worker.wait()
 
-    @Slot(int)  # type: ignore
+    @Slot(int)
     def set_integration_time(self, value: int) -> None:
         self.experiment.set_integration_time(value)
 
@@ -233,7 +233,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self.ui.plot_widget.setLabel("bottom", "Wavelength (nm)")
         self.ui.plot_widget.setLimits(yMin=0)
 
-    @Slot(tuple)  # type: ignore
+    @Slot(tuple)
     def plot_new_data(
         self, wavelengths: NDArray[np.floating], intensities: NDArray[np.floating]
     ) -> None:
@@ -252,7 +252,7 @@ class UserInterface(QtWidgets.QMainWindow):
         self._show_lines = not self._show_lines
         self.plot_data()
 
-    @Slot(int)  # type: ignore
+    @Slot(int)
     def update_progress_bar(self, value: int) -> None:
         self.ui.progress_bar.setValue(value)
 
@@ -261,7 +261,7 @@ class UserInterface(QtWidgets.QMainWindow):
         if self._wavelengths is None or self._intensities is None:
             QtWidgets.QMessageBox.warning(
                 self, "No data", "Perform a measurement before saving."
-            )  # type: ignore
+            )
         else:
             path, _ = QtWidgets.QFileDialog.getSaveFileName(filter="CSV Files (*.csv)")
             with open(path, mode="w") as f:
@@ -273,7 +273,7 @@ class UserInterface(QtWidgets.QMainWindow):
                 self, "Data saved", f"Data saved successfully to {path}."
             )
 
-    def show_about_dialog(self):
+    def show_about_dialog(self) -> None:
         """Show about application dialog."""
         box = QtWidgets.QMessageBox(parent=self)
         box.setText("DeadSea Optics")
